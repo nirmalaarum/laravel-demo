@@ -1,0 +1,24 @@
+ARG PHP_VERSION="8.4-trixie"
+
+FROM mcr.microsoft.com/vscode/devcontainers/php:${PHP_VERSION}
+
+ARG NODE_VERSION=22
+
+# install docker
+RUN curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh && rm get-docker.sh
+
+# install nodejs and npm
+RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash && \
+    apt-get install -y nodejs
+
+# install typescript 
+RUN npm install -g typescript
+
+# install php packages
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    libicu-dev \
+    libzip-dev \
+    libpng-dev \
+    && docker-php-ext-install \
+    pdo_pgsql intl zip gd pcntl

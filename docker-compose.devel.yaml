@@ -1,0 +1,37 @@
+services:
+  laravel-devel:
+    container_name: laravel-devel
+    image: nirmalaarum/laravel-devel:latest
+    build: 
+      context: .
+      dockerfile: dockerfile.devel
+    command: sleep infinity
+    volumes:
+      - ./:/home/vscode/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - default
+
+  laravel-postgres:
+    container_name: laravel-postgres
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: laravel
+      POSTGRES_USER: laravel123
+      POSTGRES_PASSWORD: laravel_db
+    ports:
+      - ${PG_PORT:-5432}:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - default
+
+networks:
+  default:
+    name: laravel_demo_network
+    driver: bridge
+
+volumes:
+  pgdata:
+    name: laravel_pgdata
+    driver: local
